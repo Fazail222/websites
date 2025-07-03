@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Burger Lab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+ 
+ <script>
+document.addEventListener("DOMContentLoaded", function () {
+  const cartPanel = document.getElementById("cart-panel");
+  const openCartBtn = document.getElementById("cart-icon");
+  const openCartBtnMobile = document.getElementById("cart-icon-mobile");
+  const closeCartBtns = document.querySelectorAll("#cart-close-btn");
+  const addcartbuttons = document.querySelectorAll(".add-cart");
+  const cartContent = document.querySelector(".cart-content");
+  const buyNowButton = document.querySelector(".btn-buy");
+  let cartItemCount = 0;
+
+  // Open Cart
+  openCartBtn?.addEventListener("click", () => {
+    cartPanel.classList.remove("right-[-100%]");
+    cartPanel.classList.add("right-0");
+  });
+
+  openCartBtnMobile?.addEventListener("click", () => {
+    cartPanel.classList.remove("right-[-100%]");
+    cartPanel.classList.add("right-0");
+  });
+
+  // Close Cart
+  closeCartBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      cartPanel.classList.remove("right-0");
+      cartPanel.classList.add("right-[-100%]");
+    });
+  });
+
+  // Add to Cart
+  addcartbuttons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const productBox = event.target.closest(".prduct-box");
+      if (productBox) {
+        addToCart(productBox);
+      }
+    });
+  });
+
+  function addToCart(productBox) {
+    const productImgSrc = productBox.querySelector("img").src;
+    const productTitle = productBox.querySelector(".cart-title").textContent;
+    const productPrice = productBox.querySelector(".price").textContent;
+
+    const cartItems = cartContent.querySelectorAll(".product-title");
+    for (let item of cartItems) {
+      if (item.textContent === productTitle) {
+        alert("This item is already in the cart");
+        return;
+      }
+    }
+
+    const cartBox = document.createElement("div");
+    cartBox.classList.add("cart-box", "flex", "items-center", "mt-[20px]");
+    cartBox.innerHTML = `
+      <img src="${productImgSrc}" class="w-[100px] h-[100px] rounded-[6px] object-cover mr-[20px]"> 
+      <div class="cart-details grid gap-2 mr-auto">
+        <h2 class="product-title font-bold leading-none">${productTitle}</h2>
+        <span class="price font-bold">${productPrice}</span>
+        <div class="cart-quantity flex w-[100px] border-2 rounded-[6px]">
+          <button id="decrement" class="bg-transparent w-[30px] font-[30px] cursor-pointer text-center">-</button>
+          <span class="number flex justify-center items-center w-[40px] border-l-2 border-r-2 cursor-default">1</span>
+          <button id="increment" class="bg-transparent w-[30px] font-[30px] cursor-pointer text-center">+</button>
+        </div>
+      </div>
+      <i class="cart-remove fa-solid fa-trash font-[25px] cursor-pointer text-red-600 ml-4"></i>
+    `;
+    cartContent.appendChild(cartBox);
+
+    cartBox.querySelector(".cart-remove").addEventListener("click", () => {
+      const qty = parseInt(cartBox.querySelector(".number").textContent);
+      cartBox.remove();
+      updateCartCount(-qty);
+      updateTotalPrice();
+      saveCartToStorage();
+    });
+
+    cartBox.querySelector(".cart-quantity").addEventListener("click", (event) => {
+      const numberElement = cartBox.querySelector(".number");
+      const decrementButton = cartBox.querySelector("#decrement");
+      let quantity = parseInt(numberElement.textContent);
+
+      if (event.target.id === "decrement" && quantity > 1) {
+        quantity--;
+        if (quantity === 1) {
+          decrementButton.style.color = "#999";
+        }
+        updateCartCount(-1);
+      } else if (event.target.id === "increment") {
+        quantity++;
+        decrementButton.style.color = "#333";
+        updateCartCount(1);
+      }
+
+      numberElement.textContent = quantity;
+      updateTotalPrice();
+      saveCartToStorage();
+    });
+
+    updateCartCount(1);
+    updateTotalPrice();
+    saveCartToStorage();
+  }
+
+  function updateCartCount(change) {
+    const cartItemCountBadges = document.querySelectorAll(".cart-item-count");
+    cartItemCount += change;
+
+    cartItemCountBadges.forEach(badge => {
+      if (cartItemCount > 0) {
+        badge.style.visibility = "visible";
+        badge.textContent = cartItemCount;
+      } else {
+        badge.style.visibility = "hidden";
+        badge.textContent = "";
+      }
+    });
+
+    localStorage.setItem("cartItemCount", cartItemCount);
+  }
+
+  function updateTotalPrice() {
+    const totalPriceElement = document.querySelector(".total-price");
+    const cartBoxes = cartContent.querySelectorAll(".cart-box");
+
+    let total = 0;
+    cartBoxes.forEach(cartBox => {
+      const price = parseInt(cartBox.querySelector(".price").textContent.replace(/[^\d]/g, ""));
+      const quantity = parseInt(cartBox.querySelector(".number").textContent);
+      if (!isNaN(price) && !isNaN(quantity)) {
+        total += price * quantity;
+      }
+    });
+
+    totalPriceElement.textContent = `Rs ${total}`;
+  }
+
+  function saveCartToStorage() {
+    const cartBoxes = cartContent.querySelectorAll(".cart-box");
+    const items = [];
+
+    cartBoxes.forEach(cartBox => {
+      items.push({
+        title: cartBox.querySelector(".product-title").textContent,
+        price: cartBox.querySelector(".price").textContent,
+        img: cartBox.querySelector("img").src,
+        quantity: parseInt(cartBox.querySelector(".number").textContent),
+      });
+    });
+
+    localStorage.setItem("cartItems", JSON.stringify(items));
+  }
+
+  function loadCartFromStorage() {
+    const storedItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+    cartItemCount = parseInt(localStorage.getItem("cartItemCount")) || 0;
+
+    storedItems.forEach(item => {
+      const cartBox = document.createElement("div");
+      cartBox.classList.add("cart-box", "flex", "items-center", "mt-[20px]");
+      cartBox.innerHTML = `
+        <img src="${item.img}" class="w-[100px] h-[100px] rounded-[6px] object-cover mr-[20px]"> 
+        <div class="cart-details grid gap-2 mr-auto">
+          <h2 class="product-title font-bold leading-none">${item.title}</h2>
+          <span class="price font-bold">${item.price}</span>
+          <div class="cart-quantity flex w-[100px] border-2 rounded-[6px]">
+            <button id="decrement" class="bg-transparent w-[30px] font-[30px] cursor-pointer text-center">-</button>
+            <span class="number flex justify-center items-center w-[40px] border-l-2 border-r-2 cursor-default">${item.quantity}</span>
+            <button id="increment" class="bg-transparent w-[30px] font-[30px] cursor-pointer text-center">+</button>
+          </div>
+        </div>
+        <i class="cart-remove fa-solid fa-trash font-[25px] cursor-pointer text-red-600 ml-4"></i>
+      `;
+      cartContent.appendChild(cartBox);
+
+      cartBox.querySelector(".cart-remove").addEventListener("click", () => {
+        const qty = parseInt(cartBox.querySelector(".number").textContent);
+        cartBox.remove();
+        updateCartCount(-qty);
+        updateTotalPrice();
+        saveCartToStorage();
+      });
+
+      cartBox.querySelector(".cart-quantity").addEventListener("click", (event) => {
+        const numberElement = cartBox.querySelector(".number");
+        const decrementButton = cartBox.querySelector("#decrement");
+        let quantity = parseInt(numberElement.textContent);
+
+        if (event.target.id === "decrement" && quantity > 1) {
+          quantity--;
+          updateCartCount(-1);
+          if (quantity === 1) {
+            decrementButton.style.color = "#999";
+          }
+        } else if (event.target.id === "increment") {
+          quantity++;
+          updateCartCount(1);
+          decrementButton.style.color = "#333";
+        }
+
+        numberElement.textContent = quantity;
+        updateTotalPrice();
+        saveCartToStorage();
+      });
+    });
+
+    updateCartCount(0);
+    updateTotalPrice();
+  }
+
+  loadCartFromStorage();
+
+  buyNowButton?.addEventListener("click", () => {
+    const cartBoxes = cartContent.querySelectorAll(".cart-box");
+    if (cartBoxes.length === 0) {
+      alert("Your cart is empty");
+      return;
+    }
+
+    cartBoxes.forEach(cartBox => cartBox.remove());
+    cartItemCount = 0;
+    updateCartCount(0);
+    updateTotalPrice();
+    localStorage.removeItem("cartItems");
+    localStorage.removeItem("cartItemCount");
+    alert("Thank you for your Purchase!");
+  });
+});
+</script>
+
+
+</head>
+
+<body class="bg-black min-h-screen">
+
+    <!-- Header -->
+    <header class="w-full px-6 py-4 bg-black text-white shadow-2xl flex items-center justify-between">
+        <!-- Logo & Brand -->
+        <div class="flex items-center gap-3">
+            <img src="burger.svg" alt="Burger Logo" class="w-14 h-14">
+            <h1 class="text-2xl font-extrabold text-yellow-400 tracking-wide">TheBurgerLab</h1>
+        </div>
+
+        <!-- Navigation (Desktop) -->
+        <nav class="hidden md:flex gap-6 items-center text-lg font-medium">
+            <a href="index.html" class="text-white hover:text-yellow-400 transition">Home</a>
+            <a href="menu.html" class="text-white hover:text-yellow-400 transition">Menu</a>
+            <a href="about.html" class="text-white hover:text-yellow-400 transition">About</a>
+            <a href="contact.html" class="text-white hover:text-yellow-400 transition">Contact</a>
+            <a href="menu.html"> <button
+            class="w-full bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-full font-semibold transition">Order
+            Now</button></a>
+                <div id="cart-icon" class="relative flex text-[30px] cursor-pointer">
+            <i class="fas fa-shopping-cart text-white  text-xl cursor-pointer"></i>
+             <span class="cart-item-count absolute top-0 right-[-6px] w-[18px]  h-[20px] bg-orange-400 rounded-[50%] text-[10px] text-black  text-center flex justify-center items-center" style="visibility: hidden;"></span>
+        </div>
+        </nav>
+
+        <!-- Mobile Hamburger + Close -->
+        <div class="md:hidden flex items-center gap-3">
+           <div id="cart-icon-mobile" class="relative flex text-[30px] cursor-pointer">
+  <i class="fas fa-shopping-cart text-white text-2xl cursor-pointer"></i>
+  <span class="cart-item-count absolute top-0 right-[-6px] w-[18px] h-[20px] bg-orange-400 rounded-[50%] text-[10px] text-black text-center flex justify-center items-center" style="visibility: hidden;"></span>
+</div>
+
+            <button id="menu-toggle" class="text-yellow-400 text-3xl focus:outline-none">
+                <i class="fa-solid fa-burger" id="ham"></i>
+                <i class="fa-solid fa-x hidden" id="crossbtn"></i>
+            </button>
+        </div>
+        <div id="cart-panel" class="text-black fixed top-0 right-[-100%] w-full sm:w-[360px] h-full bg-yellow-400 shadow-lg pt-[65px] px-[20px] pb-[40px] z-[100] overflow-auto transition duration-500">
+
+        <h2 class="text-center font-extrabold text-2xl">Your Cart</h2>
+        <div class="cart-content">
+            <!-- <div class="cart-box flex items-center mt-[20px]">
+                 <img src="crispy-chicken-burger-removebg-preview.png" class=" w-[100px] h-[100px] rounded-[6px] object-cover mr-[20px] "> 
+                 <div class="cart-details grid gap-2 mr-auto ">
+                    <h2 class="product-title font-bold leading-none">Cheese Burger</h2>
+                    <span class="price font-bold">RS 450</span>
+                    <div class="flex w-[100px] border-2 rounded-[6px]">
+                        <button id="decrement " class="bg-transparent w-[30px] border-none font-[30px] cursor-pointer text-center">-</button>
+                        <span class="number flex justify-center items-center w-[40px] border-l-2 border-r-2 cursor-default">1</span>
+                        <button id="increment" class="bg-transparent w-[30px] border-none font-[30px] cursor-pointer text-center">+</button>
+                    </div>
+                </div>
+              <i class="fa-solid fa-trash font-[25px] cursor-pointer " id="cart-close-btn"></i>
+            </div>  -->
+        </div>
+        <div class="flex flex-end items-center justify-center border-t-2 mt-[20px] text-[18px] p-5">
+            <div class=" text-3xl pr-4">Total</div>
+            <div class="total-price ml-[10px] font-bold">RS 0</div>
+        </div>
+        <button class="btn-buy block py-[10px] px-[30px] border-none rounded-md text-yellow-400 bg-black mt-[20px] mx-auto cursor-pointer" >BUY NOW</button>
+        <i id="cart-close-btn" class="fa-solid fa-xmark absolute top-5 right-4 text-2xl cursor-pointer"></i>
+    </div>
+
+
+    </header>
+
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu"
+        class="hidden md:hidden bg-black text-white px-6 py-6 space-y-4 absolute top-[80px] left-0 w-full z-40 origin-top transform scale-y-0 transition-transform duration-300 ease-out">
+        <a href="index.html" class="block text-lg hover:text-yellow-400">Home</a>
+        <a href="menu.html" class="block text-lg hover:text-yellow-400">Menu</a>
+        <a href="about.html" class="block text-lg hover:text-yellow-400">About</a>
+        <a href="contact.html" class="block text-lg hover:text-yellow-400">Contact</a>
+        <a href="menu.html"> <button
+            class="w-full bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-full font-semibold transition">Order
+            Now</button></a>
+    </div>
+
+
+  <main>
+    <!-- Font Awesome CDN -->
+     <section class="relative  bg-cover bg-center bg-no-repeat" style="background-image: url('motherburger.jpg');">
+  <!-- Dark Overlay -->
+  <div class="absolute inset-0 bg-black bg-opacity-80"></div>
+
+  <!-- Content -->
+  <div class="relative z-10 flex flex-col items-center justify-center p-40 text-center text-white h-full px-4 reveal-top">
+    <h2 class="text-4xl md:text-6xl font-bold font-FjallaOne">Contact US</h2>
+    <div class="w-20 h-1 bg-yellow-500 my-4"></div>
+    <p class="max-w-2xl text-lg text-gray-300 font-FjallaOne">
+     Contact Us at any time,We will be available and respond to your message as soon as possible.Thank You.
+    </p>
+  </div>
+</section>
+
+
+ 
+    <section class="bg-black text-white px-6 py-12 font-FjallaOne reveal-top">
+      <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-10">
+
+        <!-- Left Contact Info -->
+        <div class="reveal-left">
+          <h2 class="text-4xl font-bold">GET CLOSER</h2>
+          <div class="border-b-4 border-yellow-400 w-20 mt-2 mb-6"></div>
+          <p class="text-gray-300 mb-8">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.
+          </p>
+
+          <div class="grid grid-cols-2 gap-6 text-sm">
+            <!-- Location -->
+            <div class="">
+              <i class="fa-solid fa-map text-yellow-400 text-2xl mb-2"></i>
+              <h4 class="font-bold mt-1">LOCATION</h4>
+              Jannah Road,Opposite Jadeed Dastgeer school,GRW
+            </div>
+
+            <!-- Email -->
+            <div>
+              <i class="fa-solid fa-paper-plane text-yellow-400 text-2xl mb-2"></i>
+              <h4 class="font-bold mt-1">EMAIL</h4>
+              <p>contact@burgry.com</p>
+            </div>
+
+            <!-- Phone -->
+            <div>
+              <i class="fa-solid fa-phone text-yellow-400 text-2xl mb-2"></i>
+              <h4 class="font-bold mt-1">PHONE</h4>
+              <p>0323-9288221</p>
+            </div>
+
+            <!-- Hours -->
+            <div>
+              <i class="fa-solid fa-clock text-yellow-400 text-2xl mb-2"></i>
+              <h4 class="font-bold mt-1">OPEN HOUR</h4>
+              <p>10.00 am – 09.00 pm</p>
+            </div>
+          </div>
+
+          <!-- Social Media Icons -->
+          <div class="mt-8">
+            <h4 class="font-bold mb-2">OUR SOCIAL MEDIA</h4>
+            <div class="flex gap-4 text-yellow-400 text-xl">
+              <i class="fab fa-facebook-f hover:text-white cursor-pointer"></i>
+              <i class="fab fa-instagram hover:text-white cursor-pointer"></i>
+              <i class="fab fa-twitter hover:text-white cursor-pointer"></i>
+              <i class="fab fa-youtube hover:text-white cursor-pointer"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Contact Form -->
+        <form class="space-y-6 reveal-right">
+          <h2 class="text-2xl font-bold">YOUR DETAILS</h2>
+
+          <!-- Name + Email -->
+          <div class="flex flex-col md:flex-row gap-4">
+            <div class="flex-1">
+              <label class="block mb-1">First Name <span class="text-red-500">*</span></label>
+              <input type="text" placeholder="Your Name"
+                class="w-full bg-zinc-800 text-white px-4 py-3 rounded-md focus:outline-none" />
+            </div>
+            <div class="flex-1">
+              <label class="block mb-1">Email Address <span class="text-red-500">*</span></label>
+              <input type="email" placeholder="email@yourmail.com"
+                class="w-full bg-zinc-800 text-white px-4 py-3 rounded-md focus:outline-none" />
+            </div>
+          </div>
+
+          <!-- Subject -->
+          <div>
+            <label class="block mb-1">Subject <span class="text-red-500">*</span></label>
+            <input type="text" placeholder="Subject"
+              class="w-full bg-zinc-800 text-white px-4 py-3 rounded-md focus:outline-none" />
+          </div>
+
+          <!-- Message -->
+          <div>
+            <label class="block mb-1">Comments / Questions <span class="text-red-500">*</span></label>
+            <textarea rows="5" placeholder="Your Message"
+              class="w-full bg-zinc-800 text-white px-4 py-3 rounded-md focus:outline-none"></textarea>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit"
+            class="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-6 py-3 rounded-md transition">
+            Submit Message
+          </button>
+        </form>
+      </div>
+    </section>
+    
+  </main>
+  <div class="flex justify-center items-center"><h1 class="text-5xl font-bold text-yellow-400"><span class="text-white text-3xl">Our</span> Location</h1></div>
+
+    <!-- Full Width Google Map Section -->
+<div class="w-full h-[450px] p-10 reveal-top">
+  <iframe
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d421.0188155773977!2d74.19182775164826!3d32.18556826716025!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391f299451a2544b%3A0x36a54903612bcffd!2sJinnah%20Rd%2C%20Gujranwala%2C%20Pakistan!5e0!3m2!1sen!2s!4v1751304163585!5m2!1sen!2s"
+    class="w-full h-full border-0 rounded-2xl"
+    allowfullscreen=""
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade">
+  </iframe>
+</div>
+
+  <footer class="bg-yellow-500 text-white">
+    <!-- Newsletter -->
+    <div class="max-w-7xl mx-auto px-4 py-12 text-center reveal-top">
+      <h2 class="text-4xl font-extrabold text-black mb-4">GET EXCLUSIVE UPDATE</h2>
+      <p class="text-white text-lg mb-6">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <div class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-2xl mx-auto">
+        <input type="email" placeholder="Email"
+          class="w-full sm:w-2/3 px-6 py-3 rounded-md text-black focus:outline-none" />
+        <button class="bg-black text-white px-6 py-3 rounded-md flex items-center gap-2 hover:bg-gray-900">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M2.01 21L23 12 2.01 3v7l15 2-15 2z" />
+          </svg>
+          Subscribe Now
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Footer -->
+    <div class="bg-black text-white py-12 px-4">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-8 text-sm">
+        <!-- Logo & Description -->
+        <div class="md:col-span-2 reveal-left">
+          <h2 class="text-3xl font-extrabold text-white"><span class="text-white">The Burger lab</h2>
+          <p class="mt-4 text-gray-300">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus
+            nec ullamcorper mattis, pulvinar dapibus leo.</p>
+        </div>
+
+        <!-- Support Links -->
+        <div class="reveal-top">
+          <h3 class="text-lg font-bold text-white mb-2">SUPPORT</h3>
+          <ul class="space-y-1 text-gray-300">
+            <li><a href="#">FAQ's</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Term & Conditions</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="reveal-top">
+          <h3 class="text-lg font-bold text-white mb-2">PHONE</h3>
+          <p class="flex items-center gap-2 text-gray-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-500" fill="currentColor"
+              viewBox="0 0 24 24">
+              <path d="M3 2l18 10L3 22V2z" />
+            </svg>
+            0323-9288221
+          </p>
+          <h3 class="mt-4 text-lg font-bold text-white">EMAIL</h3>
+          <p class="flex items-center gap-2 text-gray-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-500" fill="currentColor"
+              viewBox="0 0 24 24">
+              <path d="M2 3h20v18H2V3zm2 2v14h16V5H4zm8 7l8-5H4l8 5z" />
+            </svg>
+            fazailnadeem223@gmail.com
+          </p>
+        </div>
+
+        <!-- Address & Social -->
+        <div class="reveal-bottom">
+          <h3 class="text-lg font-bold text-white mb-2">ADDRESS</h3>
+          <p class="flex items-center gap-2 text-gray-300 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-500" fill="currentColor"
+              viewBox="0 0 24 24">
+              <path
+                d="M12 2C8.1 2 5 5.1 5 9c0 5.3 7 13 7 13s7-7.7 7-13c0-3.9-3.1-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 11.5 12 11.5z" />
+            </svg>
+            Janah Road,opposite Jadeed Destageer school,GRW
+          </p>
+          <h3 class="text-lg font-bold text-white">FOLLOW US</h3>
+          <div class="flex space-x-4 mt-2">
+            <a href="#" class="text-yellow-500 hover:text-white">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="text-yellow-500 hover:text-white">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="text-yellow-500 hover:text-white">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="text-yellow-500 hover:text-white">
+              <i class="fab fa-tripadvisor"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom -->
+      <div class="border-t border-gray-700 mt-12 pt-6 text-end text-gray-400 text-sm">
+
+        <p class="mt-1">Copyright © 2025. All rights reserved by FazailNadeem.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Font Awesome CDN (for icons) -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+
+  <!-- JS for toggling mobile menu -->
+  <script src="app.js"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+
+  <!-- JS for toggling mobile menu -->
+  <script src="app.js"></script>
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <script>
+  ScrollReveal({
+    reset: false,       // If true, animations will repeat on scroll back
+    distance: '200px',
+    duration: 2000,
+    delay: 500
+  });
+
+  ScrollReveal().reveal('.reveal-top', { origin: 'top' });
+  ScrollReveal().reveal('.reveal-bottom', { origin: 'bottom' });
+  ScrollReveal().reveal('.reveal-left', { origin: 'left' });
+  ScrollReveal().reveal('.reveal-right', { origin: 'right' });
+</script>
+
+</body>
+
+</html>
