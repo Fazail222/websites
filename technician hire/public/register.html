@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TechnicianHire - Login/Register</title>
+  <script defer>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      const formTitle = document.getElementById('formTitle');
+      const toggleText = document.getElementById('toggleText');
+
+      document.getElementById('toggleText').addEventListener('click', () => {
+        const isLogin = !loginForm.classList.contains('hidden');
+        if (isLogin) {
+          loginForm.classList.add('hidden');
+          registerForm.classList.remove('hidden');
+          formTitle.innerText = 'Create an Account';
+          toggleText.innerText = 'Already have an account?';
+        } else {
+          loginForm.classList.remove('hidden');
+          registerForm.classList.add('hidden');
+          formTitle.innerText = 'Welcome Back';
+          toggleText.innerText = 'Don\'t have an account?';
+        }
+      });
+
+      loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+
+        if (storedUser && storedUser.email === email && storedUser.password === password) {
+          alert('Login successful!');
+          localStorage.setItem('isLoggedIn', true);
+          localStorage.setItem('userRole', storedUser.role);
+          window.location.href = 'index.html';
+        } else {
+          alert('Invalid email or password');
+        }
+      });
+
+      registerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('registerName').value;
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+        const confirm = document.getElementById('registerConfirm').value;
+
+        if (password !== confirm) {
+          alert('Passwords do not match!');
+          return;
+        }
+
+        // Show role selection modal
+        document.getElementById('roleModal').classList.remove('hidden');
+
+        // Temporarily store registration data
+        localStorage.setItem('tempUser', JSON.stringify({ name, email, password }));
+      });
+    });
+
+    function setUserRole(role) {
+      const tempUser = JSON.parse(localStorage.getItem('tempUser'));
+      if (!tempUser) return;
+
+      const userData = {
+        name: tempUser.name,
+        email: tempUser.email,
+        password: tempUser.password,
+        role: role
+      };
+
+      localStorage.setItem('user', JSON.stringify(userData));
+      localStorage.removeItem('tempUser');
+
+      alert(`Registered as ${role}! You can now login.`);
+      document.getElementById('roleModal').classList.add('hidden');
+      document.getElementById('loginForm').classList.remove('hidden');
+      document.getElementById('registerForm').classList.add('hidden');
+      document.getElementById('formTitle').innerText = 'Welcome Back';
+      document.getElementById('toggleText').innerText = 'Don\'t have an account?';
+    }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body class="bg-slate-900 text-white min-h-screen">
+  <!-- Header -->
+  <header class="relative z-10 bg-slate-900 shadow-lg ">
+    <div class="flex justify-between items-center px-4 py-3">
+
+      <!-- Logo -->
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-robot  text-slate-400 text-4xl"></i>
+        <h1 class="text-white font-bold text-3xl md:text-4xl lg:text-4xl">TechnicianHire</h1>
+      </div>
+
+      <!-- Hamburger Button (Only visible below md) -->
+      <button class="md:hidden text-white text-2xl" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <!-- Navigation Menu (visible from md and above) -->
+      <div class="hidden md:flex items-center gap-6">
+        <ul class="flex gap-4">
+          <li>
+            <a href="index.html"
+              class=" text-white hover:text-white/50 hover:text-black hover:underline underline-offset-4 p-2 rounded-lg">Home</a>
+          </li>
+          <li>
+            <a href="technician.html"
+              class=" text-white hover:text-white/50 hover:text-black hover:underline underline-offset-4 p-2 rounded-lg">Technicians</a>
+          </li>
+          <li>
+            <a href="contact.html"
+              class=" text-white hover:text-white/50 hover:text-black hover:underline underline-offset-4 p-2 rounded-lg">Contact
+              Us</a>
+          </li>
+        </ul>
+        <div id="authControls" class="flex items-center gap-4">
+  <!-- Login/Register Button (will hide after login) -->
+  <a href="register.html" id="loginBtn">
+    <button class="bg-white hover:bg-slate-600 hover:text-white transition duration-300 font-bold text-black rounded-md px-4 py-2 text-sm">
+      <i class="fas fa-right-to-bracket mr-2"></i>Login / Register
+    </button>
+  </a>
+
+  <!-- Profile Icon (hidden by default) -->
+  <div id="userProfile" class="hidden items-center gap-2 text-white">
+    <i class="fas fa-user-circle text-2xl"></i>
+    <span id="username" class="text-sm font-semibold"></span>
+  </div>
+
+  <!-- Logout Button (hidden by default) -->
+  <button id="logoutBtn" class="hidden bg-white hover:bg-slate-600 hover:text-white transition duration-300 font-bold text-black rounded-md px-4 py-2 text-sm">
+    <i class="fas fa-sign-out-alt mr-1"></i>Logout
+  </button>
+</div>
+
+      </div>
+    </div>
+
+    <!-- Mobile Menu (absolute, overlapping) -->
+    <div id="mobile-menu"
+      class="md:hidden hidden absolute top-[53px]  left-0 w-full bg-slate-900 z-50 px-4 pb-4 shadow-lg transition-all">
+      <ul class="flex flex-col gap-2">
+        <li>
+          <a href="index.html"
+            class="block  text-white hover:text-white/50 hover:text-black p-2 rounded-md transition">Home</a>
+        </li>
+        <li>
+          <a href="technician.html"
+            class="block f text-white hover:text-white/50 hover:text-black p-2 rounded-md transition">Technicians</a>
+        </li>
+        <li>
+          <a href="contact.html"
+            class="block  text-white hover:text-white/50 hover:text-black p-2 rounded-md transition">Contact
+            Us</a>
+        </li>
+        <li id="mobileLoginBtn">
+  <a href="register.html">
+    <button class="w-full text-center bg-white hover:bg-slate-600 hover:text-white transition font-bold text-black rounded-md px-4 py-2 text-sm">
+      <i class="fas fa-right-to-bracket mr-2"></i>Login / Register
+    </button>
+  </a>
+</li>
+
+<li id="mobileUserProfile" class="hidden flex items-center gap-2 text-white px-2">
+  <i class="fas fa-user-circle text-lg"></i>
+  <span id="mobileUsername" class="text-sm font-semibold"></span>
+</li>
+
+<li id="mobileLogoutBtn" class="hidden">
+  <button class="w-full text-center bg-white hover:bg-slate-600 hover:text-white transition font-bold text-black rounded-md px-4 py-2 text-sm">
+    <i class="fas fa-sign-out-alt mr-1"></i>Logout
+  </button>
+</li>
+
+      </ul>
+    </div>
+
+  </header>
+   <main>
+  <section class="min-h-screen bg-slate-900 text-white py-10 px-6 flex items-center justify-center">
+  <div class="bg-slate-800 shadow-xl rounded-lg flex flex-col lg:flex-row overflow-hidden max-w-5xl w-full">
+
+    <!-- Left: Form Section -->
+    <div class="w-full lg:w-1/2 p-8 sm:p-12 flex flex-col justify-center">
+        <div class="text-center pb-4 border-b border-gray-700 mt-10 pt-4">
+        <h1 class="text-center font-bold text-slate-500 text-3xl">
+        Login & Register</h1>
+      </div>
+      <div class="flex justify-between items-center mb-6">
+        <h2 id="formTitle" class="text-2xl font-bold text-slate-500">Welcome Back</h2>
+        <button type="button" id="toggleText" class="text-sm text-indigo-400 hover:underline">Don’t have an account?</button>
+
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="space-y-5">
+        <div>
+          <label for="loginEmail" class="block mb-1 text-gray-300">Email</label>
+          <input type="email" id="loginEmail" class="w-full p-3 rounded-md bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="you@example.com" required>
+        </div>
+        <div>
+          <label for="loginPassword" class="block mb-1 text-gray-300">Password</label>
+          <input type="password" id="loginPassword" class="w-full p-3 rounded-md bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="••••••••" required>
+        </div>
+        <div class="text-left">
+  <button type="button" onclick="showForgotModal()" class="text-indigo-400 text-sm hover:underline">Forgot your password?</button>
+</div>
+        <button type="submit" class="bg-indigo-500 hover:bg-indigo-600 w-full py-3 rounded-md font-semibold transition">Login</button>
+      </form>
+
+      <!-- Register Form (Hidden by default) -->
+      <form id="registerForm" class="space-y-5 hidden" onsubmit="registerTechnician(event)">
+        <div>
+          <label for="registerName" class="block mb-1 text-gray-300">Full Name</label>
+          <input type="text" id="registerName" class="w-full p-3 rounded-md bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="John Doe" required>
+        </div>
+        <div>
+          <label for="registerEmail" class="block mb-1 text-gray-300">Email</label>
+          <input type="email" id="registerEmail" class="w-full p-3 rounded-md bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="you@example.com" required>
+        </div>
+        <div>
+          <label for="registerPassword" class="block mb-1 text-gray-300">Password</label>
+          <input type="password" id="registerPassword" class="w-full p-3 rounded-md bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="••••••••" required>
+        </div>
+        <div>
+          <label for="registerConfirm" class="block mb-1 text-gray-300">Confirm Password</label>
+          <input type="password" id="registerConfirm" class="w-full p-3 rounded-md bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="bg-indigo-500 hover:bg-indigo-600 w-full py-3 rounded-md font-semibold transition">Register</button>
+      </form>
+
+      <!-- Divider -->
+      <div class="flex items-center my-6">
+        <div class="flex-grow h-px bg-slate-600"></div>
+        <span class="px-4 text-gray-400 text-sm">or</span>
+        <div class="flex-grow h-px bg-slate-600"></div>
+      </div>
+
+      <!-- Google Button -->
+      <button class="w-full py-3 bg-white text-black font-semibold rounded-md flex items-center justify-center gap-3 hover:bg-gray-100 transition">
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5" />
+        Continue with Google
+      </button>
+    </div>
+
+    <!-- Right: Image -->
+     <div>
+    <img src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg" class="lg:w-[350] lg:h-[300px]   lg:mt-48 mt-10" alt="Phone image"></div>
+  </div>
+</section>
+
+
+   </main>
+
+
+
+
+  <footer class="bg-gray-900 text-white py-10 px-6 sm:px-12">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+
+    <!-- Logo & About -->
+    <div>
+      <h2 class="text-2xl font-bold mb-4">TechnicianHire</h2>
+      <p class="text-gray-400 text-sm">We provide reliable repair, maintenance, and IT solutions for all your devices. Fast. Affordable. Trusted.</p>
+    </div>
+
+    <!-- Links -->
+    <div>
+      <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
+      <ul class="space-y-2 text-gray-300 text-sm">
+        <li><a href="index.html" class="hover:text-white">Home</a></li>
+        <li><a href="technician.html" class="hover:text-white">technicians</a></li>
+        <li><a href="contact.html" class="hover:text-white">Contact Us</a></li>
+      </ul>
+    </div>
+
+    <!-- Contact Info -->
+    <div>
+      <h3 class="text-xl font-semibold mb-4">Contact Us</h3>
+      <ul class="text-gray-300 text-sm space-y-2">
+        <li>📍 123 Repair Lane, Tech City</li>
+        <li>📞 (123) 456-7890</li>
+        <li>✉️ support@technicianHire.com</li>
+        <li>
+          <div class="flex space-x-4 mt-2">
+            <a href="#" class="hover:text-white">🌐</a>
+            <a href="#" class="hover:text-white">🐦</a>
+            <a href="#" class="hover:text-white">📘</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="border-t border-gray-700 mt-10 pt-4 text-center text-gray-500 text-sm">
+    © 2025 TechnicianHire All rights reserved.
+  </div>
+</footer>
+<script>
+  function toggleFormAlt() {
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const formTitle = document.getElementById("formTitle");
+    const toggleText = document.getElementById("toggleText");
+
+    const isLogin = !loginForm.classList.contains("hidden");
+
+    if (isLogin) {
+      loginForm.classList.add("hidden");
+      registerForm.classList.remove("hidden");
+      formTitle.innerText = "Create an Account";
+      toggleText.innerText = "Already have an account?";
+    } else {
+      loginForm.classList.remove("hidden");
+      registerForm.classList.add("hidden");
+      formTitle.innerText = "Welcome Back";
+      toggleText.innerText = "Don’t have an account?";
+    }
+  }
+
+  // Set role on register (simulate technician role)
+ function registerTechnician(e) {
+  e.preventDefault();
+  // Show modal
+  document.getElementById("roleModal").classList.remove("hidden");
+}
+
+function setUserRole(role) {
+  localStorage.setItem('userRole', role);
+  alert(`Registered as ${role}!`);
+  window.location.href = 'technician.html';
+}
+
+</script>
+<script src="auth.js" defer></script>
+<!-- Role Selection Modal -->
+<div id="roleModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white text-black rounded-lg shadow-lg w-80 max-w-full p-6 text-center">
+      <h2 class="text-xl font-bold mb-4">Choose your role</h2>
+      <p class="text-gray-600 mb-6">Please select how you want to register:</p>
+      <div class="flex justify-center gap-4">
+        <button onclick="setUserRole('technician')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded font-semibold w-full">Technician</button>
+        <button onclick="setUserRole('client')" class="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded font-semibold w-full">Client</button>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
+

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TechnicianHire</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<script>
+  (function () {
+    emailjs.init("JBguVDS5QDKxfox2o");
+  })();
+</script>
+
+  <script defer>
+    // Toggle menu
+    function toggleMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+  </script>
+</head>
+
+<body class="bg-slate-200 text-gray-800">
+  <!-- Header -->
+ <header class="relative z-10 bg-slate-900 shadow-lg ">
+    <div class="flex justify-between items-center px-4 py-3">
+
+      <!-- Logo -->
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-robot  text-slate-400 text-4xl"></i>
+        <h1 class="text-white font-bold text-3xl md:text-4xl lg:text-4xl">TechnicianHire</h1>
+      </div>
+
+      <!-- Hamburger Button (Only visible below md) -->
+      <button class="md:hidden text-white text-2xl" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <!-- Navigation Menu (visible from md and above) -->
+      <div class="hidden md:flex items-center gap-6">
+        <ul class="flex gap-4">
+          <li>
+            <a href="index.html"
+              class=" text-white hover:text-white/50 hover:text-black hover:underline underline-offset-4 p-2 rounded-lg">Home</a>
+          </li>
+          <li>
+            <a href="technician.html"
+              class=" text-white hover:text-white/50 hover:text-black hover:underline underline-offset-4 p-2 rounded-lg">Technicians</a>
+          </li>
+          <li>
+            <a href="contact.html"
+              class=" text-white hover:text-white/50 hover:text-black hover:underline underline-offset-4 p-2 rounded-lg">Contact
+              Us</a>
+          </li>
+        </ul>
+        <div id="authControls" class="flex items-center gap-4">
+  <!-- Login/Register Button (will hide after login) -->
+  <a href="register.html" id="loginBtn">
+    <button class="bg-white hover:bg-slate-600 hover:text-white transition duration-300 font-bold text-black rounded-md px-4 py-2 text-sm">
+      <i class="fas fa-right-to-bracket mr-2"></i>Login / Register
+    </button>
+  </a>
+
+  <!-- Profile Icon (hidden by default) -->
+  <div id="userProfile" class="hidden items-center gap-2 text-white">
+    <i class="fas fa-user-circle text-2xl"></i>
+    <span id="username" class="text-sm font-semibold"></span>
+  </div>
+
+  <!-- Logout Button (hidden by default) -->
+  <button id="logoutBtn" class="hidden bg-white hover:bg-slate-600 hover:text-white transition duration-300 font-bold text-black rounded-md px-4 py-2 text-sm">
+    <i class="fas fa-sign-out-alt mr-1"></i>Logout
+  </button>
+</div>
+
+      </div>
+    </div>
+
+    <!-- Mobile Menu (absolute, overlapping) -->
+    <div id="mobile-menu"
+      class="md:hidden hidden absolute top-[53px]  left-0 w-full bg-slate-900 z-50 px-4 pb-4 shadow-lg transition-all">
+      <ul class="flex flex-col gap-2">
+        <li>
+          <a href="index.html"
+            class="block  text-white hover:text-white/50 hover:text-black p-2 rounded-md transition">Home</a>
+        </li>
+        <li>
+          <a href="technician.html"
+            class="block f text-white hover:text-white/50 hover:text-black p-2 rounded-md transition">Technicians</a>
+        </li>
+        <li>
+          <a href="contact.html"
+            class="block  text-white hover:text-white/50 hover:text-black p-2 rounded-md transition">Contact
+            Us</a>
+        </li>
+        <li id="mobileLoginBtn">
+  <a href="register.html">
+    <button class="w-full text-center bg-white hover:bg-slate-600 hover:text-white transition font-bold text-black rounded-md px-4 py-2 text-sm">
+      <i class="fas fa-right-to-bracket mr-2"></i>Login / Register
+    </button>
+  </a>
+</li>
+
+<li id="mobileUserProfile" class="hidden flex items-center gap-2 text-white px-2">
+  <i class="fas fa-user-circle text-lg"></i>
+  <span id="mobileUsername" class="text-sm font-semibold"></span>
+</li>
+
+<li id="mobileLogoutBtn" class="hidden">
+  <button class="w-full text-center bg-white hover:bg-slate-600 hover:text-white transition font-bold text-black rounded-md px-4 py-2 text-sm">
+    <i class="fas fa-sign-out-alt mr-1"></i>Logout
+  </button>
+</li>
+
+      </ul>
+    </div>
+
+  </header>
+
+  <!-- Main Section -->
+   <main>
+    <!-- Contact Section -->
+<section class="bg-slate-800 text-white py-20 px-6 z-0  sm:px-10 relative overflow-hidden">
+
+  <!-- Background SVG Decoration -->
+ 
+
+  <div class="max-w-7xl mx-auto grid grid-cols-1  lg:grid-cols-2 gap-10 z-10 relative items-center">
+    
+    <!-- Text + Form -->
+    <div>
+      <h2 class="text-4xl font-extrabold mb-6">Get in Touch</h2>
+      <p class="text-gray-300 mb-8 text-lg">Have a question, suggestion, or need assistance? We’d love to hear from you. Fill out the form and we’ll get back to you ASAP.</p>
+      
+  <form id="contact-form" onsubmit="sendEmail(event)" class="space-y-4 bg-slate-900 p-7 rounded-lg shadow-lg max-w-xl mx-auto">
+  <div>
+    <label class="block mb-1 text-gray-300" for="name">Name</label>
+    <input type="text" id="name" name="from_name" class="w-full p-3 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="John Doe" required>
+  </div>
+  <div>
+    <label class="block mb-1 text-gray-300" for="email">Email</label>
+    <input type="email" id="email" name="from_email" class="w-full p-3 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="john@example.com" required>
+  </div>
+  <div>
+    <label class="block mb-1 text-gray-300" for="message">Message</label>
+    <textarea id="message" name="message" rows="4" class="w-full p-3 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="Your message..." required></textarea>
+  </div>
+  <button type="submit" class="bg-indigo-500 hover:bg-indigo-600 transition font-semibold py-3 px-6 rounded-lg shadow-md">
+    Send Message <i class="fa-solid fa-arrow-right"></i>
+  </button>
+</form>
+    </div>
+
+    <!-- Illustration -->
+    <div class="flex justify-center">
+      <img src="—Pngtree—customer service concept with a_8644423.png" alt="Contact Us Illustration" class="max-w-md w-full ">
+    </div>
+  </div>
+</section>
+
+</main>
+ 
+  <footer class="bg-gray-900 text-white py-10 px-6 sm:px-12">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+    
+    <!-- Logo & About -->
+    <div>
+      <h2 class="text-2xl font-bold mb-4">TechnicianHire</h2>
+      <p class="text-gray-400 text-sm">We provide reliable repair, maintenance, and IT solutions for all your devices. Fast. Affordable. Trusted.</p>
+    </div>
+
+    <!-- Links -->
+    <div>
+      <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
+      <ul class="space-y-2 text-gray-300 text-sm">
+        <li><a href="index.html" class="hover:text-white">Home</a></li>
+        <li><a href="technician.html" class="hover:text-white">technicians</a></li>
+        <li><a href="contact.html" class="hover:text-white">Contact Us</a></li>
+      </ul>
+    </div>
+
+    <!-- Contact Info -->
+    <div>
+      <h3 class="text-xl font-semibold mb-4">Contact Us</h3>
+      <ul class="text-gray-300 text-sm space-y-2">
+        <li>📍 123 Repair Lane, Tech City</li>
+        <li>📞 (123) 456-7890</li>
+        <li>✉️ support@technicianHire.com</li>
+        <li>
+          <div class="flex space-x-4 mt-2">
+            <a href="#" class="hover:text-white">🌐</a>
+            <a href="#" class="hover:text-white">🐦</a>
+            <a href="#" class="hover:text-white">📘</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="border-t border-gray-700 mt-10 pt-4 text-center text-gray-500 text-sm">
+    © 2025 TechnicianHire All rights reserved.
+  </div>
+</footer>
+
+<script>
+  function sendEmail(e) {
+    e.preventDefault(); // Prevent page reload
+
+    emailjs.sendForm('service_yo7eizs', 'template_g0p16yp', '#contact-form')
+      .then(function () {
+        alert('✅ Message sent successfully!');
+        document.getElementById("contact-form").reset();
+      }, function (error) {
+        alert('❌ Failed to send message: ' + JSON.stringify(error));
+      });
+  }
+</script>
+
+<script src="auth.js" defer></script>
+</body>
+
+</html>

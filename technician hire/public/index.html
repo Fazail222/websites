@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TechnicianHire</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script defer>
+    // Toggle menu
+    function toggleMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+  </script>
+</head>
+
+<body class="bg-slate-200 text-gray-800">
+  <!-- Header -->
+  <header class="relative z-10 bg-slate-900 shadow-lg ">
+    <div class="flex justify-between items-center px-4 py-3">
+
+      <!-- Logo -->
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-robot  text-slate-400 text-4xl"></i>
+        <h1 class="text-white font-bold text-3xl md:text-4xl lg:text-4xl">TechnicianHire</h1>
+      </div>
+
+      <!-- Hamburger Button (Only visible below md) -->
+      <button class="md:hidden text-white text-2xl" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <!-- Navigation Menu (visible from md and above) -->
+      <div class="hidden md:flex items-center gap-6">
+        <ul class="flex gap-4">
+          <li>
+            <a href="index.html"
+              class=" text-white hover:text-white/50 hover:text-black hover:underline underline-offset-4 p-2 rounded-lg">Home</a>
+          </li>
+          <li>
+            <a href="technician.html"
+              class=" text-white hover:text-white/50 hover:text-black hover:underline underline-offset-4 p-2 rounded-lg">Technicians</a>
+          </li>
+          <li>
+            <a href="contact.html"
+              class=" text-white hover:text-white/50 hover:text-black hover:underline underline-offset-4 p-2 rounded-lg">Contact
+              Us</a>
+          </li>
+        </ul>
+        <div id="authControls" class="flex items-center gap-4">
+  <!-- Login/Register Button (will hide after login) -->
+  <a href="register.html" id="loginBtn">
+    <button class="bg-white hover:bg-slate-600 hover:text-white transition duration-300 font-bold text-black rounded-md px-4 py-2 text-sm">
+      <i class="fas fa-right-to-bracket mr-2"></i>Login / Register
+    </button>
+  </a>
+
+  <!-- Profile Icon (hidden by default) -->
+  <div id="userProfile" class="hidden items-center gap-2 text-white">
+    <i class="fas fa-user-circle text-2xl"></i>
+    <span id="username" class="text-sm font-semibold"></span>
+  </div>
+
+  <!-- Logout Button (hidden by default) -->
+  <button id="logoutBtn" class="hidden bg-white hover:bg-slate-600 hover:text-white transition duration-300 font-bold text-black rounded-md px-4 py-2 text-sm">
+    <i class="fas fa-sign-out-alt mr-1"></i>Logout
+  </button>
+</div>
+
+      </div>
+    </div>
+
+    <!-- Mobile Menu (absolute, overlapping) -->
+    <div id="mobile-menu"
+      class="md:hidden hidden absolute top-[53px]  left-0 w-full bg-slate-900 z-50 px-4 pb-4 shadow-lg transition-all">
+      <ul class="flex flex-col gap-2">
+        <li>
+          <a href="index.html"
+            class="block  text-white hover:text-white/50 hover:text-black p-2 rounded-md transition">Home</a>
+        </li>
+        <li>
+          <a href="technician.html"
+            class="block f text-white hover:text-white/50 hover:text-black p-2 rounded-md transition">Technicians</a>
+        </li>
+        <li>
+          <a href="contact.html"
+            class="block  text-white hover:text-white/50 hover:text-black p-2 rounded-md transition">Contact
+            Us</a>
+        </li>
+        <li id="mobileLoginBtn">
+  <a href="register.html">
+    <button class="w-full text-center bg-white hover:bg-slate-600 hover:text-white transition font-bold text-black rounded-md px-4 py-2 text-sm">
+      <i class="fas fa-right-to-bracket mr-2"></i>Login / Register
+    </button>
+  </a>
+</li>
+
+<li id="mobileUserProfile" class="hidden flex items-center gap-2 text-white px-2">
+  <i class="fas fa-user-circle text-lg"></i>
+  <span id="mobileUsername" class="text-sm font-semibold"></span>
+</li>
+
+<li id="mobileLogoutBtn" class="hidden">
+  <button class="w-full text-center bg-white hover:bg-slate-600 hover:text-white transition font-bold text-black rounded-md px-4 py-2 text-sm">
+    <i class="fas fa-sign-out-alt mr-1"></i>Logout
+  </button>
+</li>
+
+      </ul>
+    </div>
+
+  </header>
+
+
+  <!-- Main Section -->
+  <main>
+
+    <!-- Decorative SVG Wave Divider -->
+    <div class="relative">
+      <div class="custom-shape-divider-bottom-1750785439">
+        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"
+          class="fill-slate-700">
+          <path
+            d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
+            opacity=".25" class="shape-fill"></path>
+          <path
+            d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z"
+            opacity=".5" class="shape-fill"></path>
+          <path
+            d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"
+            class="shape-fill"></path>
+        </svg>
+      </div>
+      <!-- Main Hero Section -->
+      <div class="relative z-0 flex flex-col lg:flex-row justify-between items-center px-4 sm:px-8 pt-0 pb-10 gap-8">
+        <!-- Text Content -->
+        <div class="flex flex-col w-full lg:max-w-xl bg-slate-700 shadow-md shadow-black sm:p-10 p-6 rounded-lg">
+          <h1 class="font-bold text-3xl sm:text-2xl text-slate-400 leading-tight mb-4">
+            <span class="block text-left">Hire the Best <span class="font-extrabold">Technician</span></span>
+            <span class="block text-left">Near You.</span>
+          </h1>
+          <p class="text-gray-400 text-base font-bold mb-5">
+            Want to get out from the headache of finding reliable technicians?
+            <span class="font-extrabold text-gray-300">TechnicianHire</span> is your one-stop solution for all kinds of
+            repairs.
+            Our network of skilled and trustworthy technicians are ready to help you with anything from appliance
+            repair to plumbing, electrical, and HVAC services.
+          </p>
+          <div>
+            <a href="technician.html">
+            <button
+              class="bg-white mt-2 transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:bg-slate-600 hover:text-white font-bold text-black rounded-md px-4 py-2 sm:text-md sm:py-3 sm:px-5 text-sm">
+              Book A Technician
+            </button></a>
+          </div>
+        </div>
+
+        <!-- Image -->
+        <div class="flex justify-center w-full">
+          <img src="—Pngtree—professional technicians for repairing and_7257766.png" alt="Technician with laptop"
+            class="w-[250px] sm:w-[300px] md:w-[400px] lg:w-[450px] rounded-lg" />
+        </div>
+      </div>
+    </div>
+
+    <div class="p-5 bg-white min-h-screen">
+      <section class="py-12 px-4 sm:px-8 ">
+        <h1 class="text-3xl lg:text-5xl font-bold text-slate-700 mb-4 text-center">What we Offer?</h1>
+        <p class="text-slate-600 mb-10 text-center">We offer a wide range of professional home repair and maintenance
+          services, all delivered by trusted
+          and verified technicians. Whether you need an electrician, plumber, appliance repair expert, or AC technician
+        </p>
+        <section class="my-12 px-4 sm:px-8">
+  <h2 class="text-3xl font-bold text-slate-700 mb-6 text-center">Our Electrician Work</h2>
+  <div class="flex flex-col lg:flex-row items-center gap-8">
+    <!-- Carousel Left -->
+    <div class="w-full lg:w-1/2 relative h-[300px] overflow-hidden">
+      <div id="carousel-electrician" class="relative h-full">
+        <img src="male-electrician-works-switchboard-with-electrical-connecting-cable.jpg"
+          class="carousel-slide w-full h-full object-cover rounded-lg opacity-0 transition-opacity duration-1000" />
+        <img src="man-electrical-technician-working-switchboard-with-fuses.jpg"
+          class="carousel-slide w-full h-full object-cover rounded-lg opacity-0 transition-opacity duration-1000" />
+        <img src="elect.jpg"
+          class="carousel-slide w-full h-full object-cover rounded-lg opacity-0 transition-opacity duration-1000" />
+      </div>
+      <!-- Arrows -->
+      <button onclick="changeSlide('carousel-electrician', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-10">
+        <i class="fa-solid fa-chevron-left  text-white p-2 rounded-full"></i>
+      </button>
+      <button onclick="changeSlide('carousel-electrician', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-10">
+        <i class="fa-solid fa-chevron-right  text-white p-2 rounded-full"></i>
+      </button>
+    </div>
+
+    <!-- Text Right -->
+    <div class="w-full lg:w-1/2">
+      <p class="text-slate-600 text-justify">
+        At <strong>TechnicianHire</strong>, we connect you with licensed and experienced electricians
+        who specialize in safe, efficient, and code-compliant electrical services. Whether you're dealing with a
+        faulty switch, a tripping circuit breaker, or need a full home rewiring, our electricians are equipped with
+        the skills and tools to get the job done right. We prioritize safety and precision in every project — from
+        minor repairs to major installations — ensuring your home or business stays powered and protected. With 24/7
+        availability and transparent pricing, you can count on us for fast, reliable, and professional electrical
+        solutions.
+      </p>
+    </div>
+  </div>
+</section>
+
+        <section class="my-12 px-4 sm:px-8">
+  <h2 class="text-3xl font-bold text-slate-700 mb-6 text-center">Our Plumbing Work</h2>
+  <div class="flex flex-col lg:flex-row items-center gap-8">
+    <!-- Carousel Left -->
+    <div class="w-full lg:w-1/2 relative h-[300px] overflow-hidden">
+      <div id="carousel-plumber" class="relative h-full">
+        <img src="sanitary-technician-gesturing-thumb-up.jpg" class="carousel-slide w-full h-full object-cover rounded-lg opacity-0 transition-opacity duration-1000" />
+        <img src="side-view-man-working-as-plumber.jpg" class="carousel-slide w-full h-full object-cover rounded-lg opacity-0 transition-opacity duration-1000" />
+        <img src="asian-plumber-blue-overalls-clearing-blockage-drain.jpg" class="carousel-slide w-full h-full object-cover rounded-lg opacity-0 transition-opacity duration-1000" />
+      </div>
+      <button onclick="changeSlide('carousel-plumber', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-10">
+        <i class="fa-solid fa-chevron-left  text-white p-2 rounded-full"></i>
+      </button>
+      <button onclick="changeSlide('carousel-plumber', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-10">
+        <i class="fa-solid fa-chevron-right  text-white p-2 rounded-full"></i>
+      </button>
+    </div>
+
+    <!-- Text Right -->
+    <div class="w-full lg:w-1/2">
+      <p class="text-slate-600 text-justify">
+        From dripping faucets to major pipe installations, <strong>TechnicianHire</strong> provides certified plumbers who
+        tackle every issue with professionalism and care. Our experts diagnose and resolve plumbing problems quickly and cleanly,
+        ensuring lasting results. Whether you're dealing with clogged drains, low water pressure, or water heater issues, our
+        team arrives equipped and ready. Transparent pricing, emergency support, and top-tier service make us your go-to for
+        dependable plumbing solutions.
+      </p>
+    </div>
+  </div>
+</section>
+
+       <section class="my-12 px-4 sm:px-8">
+  <h2 class="text-3xl font-bold text-slate-700 mb-6 text-center">Our AC Repair Work</h2>
+  <div class="flex flex-col lg:flex-row items-center gap-8">
+    <div class="w-full lg:w-1/2 relative h-[300px] overflow-hidden">
+      <div id="carousel-ac" class="relative h-full">
+        <img src="checking-conditioner.jpg" class="carousel-slide w-full h-full object-cover rounded-lg opacity-0 transition-opacity duration-1000" />
+        <img src="low-angle-people-working-with-drill.jpg" class="carousel-slide w-full h-full object-cover rounded-lg opacity-0 transition-opacity duration-1000" />
+        <img src="men-working-with-equipment-full-shot.jpg" class="carousel-slide w-full h-full object-cover rounded-lg opacity-0 transition-opacity duration-1000" />
+      </div>
+      <button onclick="changeSlide('carousel-ac', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-10">
+        <i class="fa-solid fa-chevron-left  text-white p-2 rounded-full"></i>
+      </button>
+      <button onclick="changeSlide('carousel-ac', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-10">
+        <i class="fa-solid fa-chevron-right  text-white p-2 rounded-full"></i>
+      </button>
+    </div>
+
+    <div class="w-full lg:w-1/2">
+      <p class="text-slate-600 text-justify">
+        Beat the heat with our expert air conditioning services. Whether you need routine maintenance, gas refilling, or emergency
+        repair, our AC technicians deliver efficient and cost-effective solutions. We service all major brands and models to ensure
+        optimal performance and energy efficiency. At <strong>TechnicianHire</strong>, we prioritize your comfort with prompt
+        service, skilled professionals, and guaranteed satisfaction.
+      </p>
+    </div>
+  </div>
+</section>
+
+        <section class="my-12 px-4 sm:px-8">
+  <h2 class="text-3xl font-bold text-slate-700 mb-6 text-center">Our Painting Work</h2>
+  <div class="flex flex-col lg:flex-row items-center gap-8">
+    <div class="w-full lg:w-1/2 relative h-[300px] overflow-hidden">
+      <div id="carousel-paint" class="relative h-full">
+        <img src="painting-walls-pink.jpg" class="carousel-slide w-full h-full object-cover rounded-lg opacity-0 transition-opacity duration-1000" />
+        <img src="woman-repairer-with-painting-roller-isolated.jpg" class="carousel-slide w-full h-full object-cover rounded-lg opacity-0 transition-opacity duration-1000" />
+        <img src="worker-painting-wall-with-spray-gun-white-color.jpg" class="carousel-slide w-full h-full object-cover rounded-lg opacity-0 transition-opacity duration-1000" />
+      </div>
+      <button onclick="changeSlide('carousel-paint', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-10">
+        <i class="fa-solid fa-chevron-left  text-white p-2 rounded-full"></i>
+      </button>
+      <button onclick="changeSlide('carousel-paint', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-10">
+        <i class="fa-solid fa-chevron-right  text-white p-2 rounded-full"></i>
+      </button>
+    </div>
+
+    <div class="w-full lg:w-1/2">
+      <p class="text-slate-600 text-justify">
+        A quality paint job can transform your entire space — and our painters know how to do it right. From homes to offices, our
+        team offers interior and exterior painting with precision, speed, and style. Whether it's fresh walls or a full renovation,
+        <strong>TechnicianHire</strong> provides color consultation, clean work, and stunning results. We use high-grade materials
+        and techniques that last, so your walls stay beautiful for years to come.
+      </p>
+    </div>
+  </div>
+</section>
+
+       <section class="my-12 px-4 sm:px-8">
+  <h2 class="text-3xl font-bold text-slate-700 mb-6 text-center">Our Appliance Repair Work</h2>
+  <div class="flex flex-col lg:flex-row items-center gap-8">
+    <div class="w-full lg:w-1/2 relative h-[300px] overflow-hidden">
+      <div id="carousel-appliances" class="relative h-full">
+        <img src="service-maintenance-worker-repairing.jpg" class="carousel-slide w-full h-full object-cover rounded-lg opacity-0 transition-opacity duration-1000" />
+        <img src="service-maintenance-worker-repairing (1).jpg" class="carousel-slide w-full h-full object-cover rounded-lg opacity-0 transition-opacity duration-1000" />
+        <img src="male-electrician-works-switchboard-with-electrical-connecting-cable.jpg" class="carousel-slide w-full h-full object-cover rounded-lg opacity-0 transition-opacity duration-1000" />
+      </div>
+      <button onclick="changeSlide('carousel-appliances', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 z-10">
+        <i class="fa-solid fa-chevron-left bg-slate-700 text-white p-2 rounded-full"></i>
+      </button>
+      <button onclick="changeSlide('carousel-appliances', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 z-10">
+        <i class="fa-solid fa-chevron-right bg-slate-700 text-white p-2 rounded-full"></i>
+      </button>
+    </div>
+
+    <div class="w-full lg:w-1/2">
+      <p class="text-slate-600 text-justify">
+        Appliances break — but that doesn't mean your day should too. From refrigerators to washing machines, our repair technicians
+        restore function fast. We handle both common issues and complex breakdowns with genuine parts and a satisfaction guarantee.
+        <strong>TechnicianHire</strong> brings convenience back into your life with same-day service, trained experts, and honest
+        pricing. Don’t replace it — repair it with confidence.
+      </p>
+    </div>
+  </div>
+</section>
+
+    </div>
+    <div>
+      <div class="p-5 bg-slate-700 min-h-screen">
+        <section class="py-12 px-4 sm:px-8 bg-slate-700 text-center">
+          <h2 class="text-3xl lg:text-5xl font-bold text-slate-400 mb-4">Why Choose Us?</h2>
+          <p class="text-slate-400 mb-10">We connect you with top-rated, trusted, and affordable technicians near you.
+          </p>
+
+          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+            <div class="bg-white  p-6 rounded-lg shadow-md transition duration-300 hover:bg-slate-600 hover:text-white">
+              <i class="fas fa-tools  text-3xl mb-3"></i>
+              <h3 class="font-bold text-lg  mb-2">Expert Technicians</h3>
+              <p class=" text-sm">Skilled and experienced professionals for every repair.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md transition duration-300 hover:bg-slate-600 hover:text-white">
+              <i class="fas fa-clock  text-3xl mb-3"></i>
+              <h3 class="font-bold text-lg  mb-2">Quick Response</h3>
+              <p class=" text-sm">We ensure timely services right when you need them.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md transition duration-300 hover:bg-slate-600 hover:text-white">
+              <i class="fas fa-check-circle  text-3xl mb-3"></i>
+              <h3 class="font-bold text-lg  mb-2">Verified & Trusted</h3>
+              <p class=" text-sm">Only trusted and background-checked technicians work with us.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md transition duration-300 hover:bg-slate-600 hover:text-white">
+              <i class="fa-solid fa-clock  text-3xl mb-3"></i>
+              <h3 class="font-bold text-lg  mb-2">24/7 Availability</h3>
+              <p class=" text-sm">Our site and app are available 24/7, so you can book a technician anytime, anywhere.
+              </p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md transition duration-300 hover:bg-slate-600 hover:text-white">
+              <i class="fa-solid fa-money-check-dollar text-3xl mb-3"></i>
+              <h3 class="font-bold text-lg  mb-2">Affordable Prices</h3>
+              <p class=" text-sm">We offer competitive pricing without sacrificing quality, so you can save money and
+                get
+                the best service.</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md transition duration-300 hover:bg-slate-600 hover:text-white">
+              <i class="fas fa-location-dot text-3xl mb-3 transition-colors duration-300"></i>
+              <h3 class="font-bold text-lg mb-2">Service Near You</h3>
+              <p class="text-sm">Find verified technicians based in your local area quickly.</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+      <div class="min-h-screen bg-slate-300">
+        <section class="py-12 px-4 sm:px-8 ">
+          <h1 class="text-3xl lg:text-5xl font-bold text-slate-700 mb-4 text-center"> Testimonals</h1>
+          <p class="text-slate-600 mb-10 text-center">Here are some testimonals that are fully satisfied by our work and
+            our services.</p>
+          <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+            <div class="bg-white  p-6 rounded-lg shadow-md transition duration-300 hover:bg-slate-600 hover:text-white">
+              <i class="fa-solid fa-quote-left text-left text-3xl mb-3"></i>
+              <div class="flex justify-center mb-3">
+                <img src="cm.jpg" class="rounded-full w-[100px] h-[75px]" alt="">
+              </div>
+
+              <h3 class="font-bold text-lg  mb-2 text-center">CM Punk</h3>
+              <p class=" text-sm text-center">“Booking was easy, and the technician was polite and knowledgeable.”
+
+              </p>
+              <div class="flex justify-end mt-3">
+                <i class="fa-solid fa-quote-right text-3xl"></i>
+              </div>
+
+            </div>
+            <div class="bg-white  p-6 rounded-lg shadow-md transition duration-300 hover:bg-slate-600 hover:text-white">
+              <i class="fa-solid fa-quote-left text-left text-3xl mb-3"></i>
+              <div class="flex justify-center mb-3">
+                <img src="randy.jpg" class="rounded-full w-[100px] h-[75px]" alt="">
+              </div>
+
+              <h3 class="font-bold text-lg  mb-2 text-center">Randy Orten</h3>
+              <p class=" text-sm text-center">“The technician arrived on time and fixed the issue faster than expected.
+                Excellent service!”
+
+              </p>
+              <div class="flex justify-end mt-3">
+                <i class="fa-solid fa-quote-right text-3xl"></i>
+              </div>
+
+            </div>
+            <div class="bg-white  p-6 rounded-lg shadow-md transition duration-300 hover:bg-slate-600 hover:text-white">
+              <i class="fa-solid fa-quote-left text-left text-3xl mb-3"></i>
+              <div class="flex justify-center mb-3">
+                <img src="john.jpg" class="rounded-full w-[100px] h-[75px]" alt="">
+              </div>
+
+              <h3 class="font-bold text-lg  mb-2 text-center">John Cena</h3>
+              <p class=" text-sm text-center">“I finally found a platform I can trust. No more guessing — these guys are
+                professionals.”
+
+              </p>
+              <div class="flex justify-end mt-3">
+                <i class="fa-solid fa-quote-right text-3xl"></i>
+              </div>
+
+            </div>
+
+        </section>
+
+      </div>
+  </main>
+  <footer class="bg-gray-900 text-white py-10 px-6 sm:px-12">
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+    
+    <!-- Logo & About -->
+    <div>
+      <h2 class="text-2xl font-bold mb-4">TechnicianHire</h2>
+      <p class="text-gray-400 text-sm">We provide reliable repair, maintenance, and IT solutions for all your devices. Fast. Affordable. Trusted.</p>
+    </div>
+
+    <!-- Links -->
+    <div>
+      <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
+      <ul class="space-y-2 text-gray-300 text-sm">
+        <li><a href="index.html" class="hover:text-white">Home</a></li>
+        <li><a href="technician.html" class="hover:text-white">technicians</a></li>
+        <li><a href="contact.html" class="hover:text-white">Contact Us</a></li>
+      </ul>
+    </div>
+
+    <!-- Contact Info -->
+    <div>
+      <h3 class="text-xl font-semibold mb-4">Contact Us</h3>
+      <ul class="text-gray-300 text-sm space-y-2">
+        <li>📍 123 Repair Lane, Tech City</li>
+        <li>📞 (123) 456-7890</li>
+        <li>✉️ support@technicianHire.com</li>
+        <li>
+          <div class="flex space-x-4 mt-2">
+            <a href="#" class="hover:text-white">🌐</a>
+            <a href="#" class="hover:text-white">🐦</a>
+            <a href="#" class="hover:text-white">📘</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="border-t border-gray-700 mt-10 pt-4 text-center text-gray-500 text-sm">
+    © 2025 TechnicianHire All rights reserved.
+  </div>
+</footer>
+
+  <footer>
+
+  </footer>
+  <script>
+    const carousels = {};
+
+    function initCarousel(id) {
+      const slides = document.querySelectorAll(`#${id} .carousel-slide`);
+      carousels[id] = {
+        index: 0,
+        slides,
+      };
+      slides.forEach((slide, i) => {
+        slide.classList.add('opacity-0');
+        slide.classList.add('absolute');
+        slide.classList.add('inset-0');
+        if (i === 0) slide.classList.remove('opacity-0');
+      });
+      setInterval(() => changeSlide(id, 1), 3000); // 3 seconds
+    }
+
+    function changeSlide(id, direction) {
+      const carousel = carousels[id];
+      if (!carousel) return;
+      const { slides } = carousel;
+      slides[carousel.index].classList.add('opacity-0');
+      carousel.index = (carousel.index + direction + slides.length) % slides.length;
+      slides[carousel.index].classList.remove('opacity-0');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initCarousel('carousel-electrician');
+      initCarousel('carousel-plumber');
+      initCarousel('carousel-ac');
+      initCarousel('carousel-paint');
+      initCarousel('carousel-appliances');
+    });
+  </script>
+
+<script src="auth.js" defer></script>
+
+</body>
+
+</html>
